@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RecipesApiApplication {
 
 	public static void main(String[] args) {
+		// testing commit
 		SpringApplication.run(RecipesApiApplication.class, args);
 	}
 
