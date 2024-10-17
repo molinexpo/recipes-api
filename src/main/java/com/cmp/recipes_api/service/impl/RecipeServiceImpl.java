@@ -32,7 +32,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeDto getRecipeById(Integer id) throws Exception {
+    public RecipeDto getRecipeById(Integer id) throws RecipeNotFoundException {
         log.info("Getting recipe with id: {}", id);
         Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("Recipe not found"));
         log.info("Returning recipe with id: {}", id);
