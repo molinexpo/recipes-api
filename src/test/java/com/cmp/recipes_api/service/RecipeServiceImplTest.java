@@ -15,10 +15,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -83,7 +88,6 @@ public class RecipeServiceImplTest {
         Recipe recipe = createRecipe(idRecipe);
         RecipeDto recipeDtoAfterSaved = createRecipeDtoAfterSaved(idRecipe);
 
-        when(recipeRepository.findById(idRecipe)).thenReturn(Optional.of(recipe));
         when(modelMapper.map(recipe, RecipeDto.class)).thenReturn(recipeDtoAfterSaved);
 
         // execution
@@ -115,6 +119,7 @@ public class RecipeServiceImplTest {
         return recipe;
     }
 
+    //TODO: Refactor me
     private RecipeDto createRecipeDtoAfterSaved(Integer idRecipe) {
         RecipeDto recipe = new RecipeDto();
         recipe.setId(idRecipe);
@@ -124,5 +129,47 @@ public class RecipeServiceImplTest {
         recipe.setNumberOfPeople(4);
         recipe.setDuration(30);
         return recipe;
+    }
+
+    @Test
+    public void testRefactorMethod_NullRecipe() {
+        // Caso: receta es null
+        List<String> result = recipeService.refactorMethod(null);
+        assertNotNull(result);
+        assertEquals(0, result.size(), "La lista debería estar vacía cuando la receta es null");
+    }
+
+    @Test
+    public void testRefactorMethod_EmptyIngredients() {
+        // Caso: receta con ingredientes vacíos
+        Recipe recipe = new Recipe();
+        recipe.setIngredients(new ArrayList<>());
+
+        List<String> result = recipeService.refactorMethod(recipe);
+        assertNotNull(result);
+        assertEquals(0, result.size(), "La lista debería estar vacía cuando no hay ingredientes");
+    }
+
+    @Test
+    public void testRefactorMethod_NoIngredientsWithA() {
+        // Caso: receta con ingredientes que no contienen "a"
+        Recipe recipe = new Recipe();
+        recipe.setIngredients(Arrays.asList("Cebollino", "Pimiento"));
+
+        List<String> result = recipeService.refactorMethod(recipe);
+        assertNotNull(result);
+        assertEquals(0, result.size(), "La lista debería estar vacía cuando no hay ingredientes con 'a'");
+    }
+
+    @Test
+    public void testRefactorMethod_IngredientsWithA() {
+        // Caso: receta con algunos ingredientes que contienen "a"
+        Recipe recipe = new Recipe();
+        recipe.setIngredients(Arrays.asList("Manzana", "Tomate", "Banana", "Cebollino"));
+
+        List<String> result = recipeService.refactorMethod(recipe);
+        assertNotNull(result);
+        assertEquals(3, result.size(), "La lista debería contener 3 ingredientes que contienen 'a'");
+        assertEquals(Arrays.asList("Manzana", "Tomate", "Banana"), result);
     }
 }

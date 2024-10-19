@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +27,22 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipeToSave = modelMapper.map(recipe, Recipe.class);
         recipeToSave.setCreationDate(new Date());
         return recipeRepository.save(recipeToSave).getId();
+    }
+
+    //TODO: refactor me
+    public List<String> refactorMethod(Recipe recipe) {
+        List<String> newIngredients = new ArrayList<>();
+        if(recipe != null) {
+            if(recipe.getIngredients() != null && recipe.getIngredients().size() > 0) {
+                for(int i = 0; i < recipe.getIngredients().size(); i++) {
+                    if (recipe.getIngredients().get(i).contains("a")) {
+                        newIngredients.add(recipe.getIngredients().get(i));
+                    }
+                }
+            }
+        }
+
+        return newIngredients;
     }
 
     @Override

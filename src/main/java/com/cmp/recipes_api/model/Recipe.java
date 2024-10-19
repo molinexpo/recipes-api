@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,5 +35,8 @@ public class Recipe {
 
     @Column
     private Date creationDate;
+
+    @Transient
+    private List<String> ingredients = List.of("lemon", "sugar", "water");
 
 }
