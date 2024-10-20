@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,11 +33,19 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeDto getRecipeById(Integer id) throws RecipeNotFoundException {
+    public RecipeDto getRecipeById(Integer id) {
         log.info("Getting recipe with id: {}", id);
         Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("Recipe not found"));
         log.info("Returning recipe with id: {}", id);
         return modelMapper.map(recipe, RecipeDto.class);
+    }
+
+    @Override
+    public List<RecipeDto> getRecipes() {
+        log.info("Getting all recipes");
+        List<Recipe> recipes = recipeRepository.findAll();
+        log.info("Returning all recipes");
+        return recipes.stream().map(recipe -> modelMapper.map(recipe, RecipeDto.class)).toList();
     }
 
     @Override

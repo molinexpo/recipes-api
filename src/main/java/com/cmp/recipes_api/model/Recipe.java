@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,9 +22,11 @@ public class Recipe {
     private String name;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private RecipeType type;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
     @Column
@@ -35,4 +38,7 @@ public class Recipe {
     @Column
     private Date creationDate;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipe_id")
+    private List<Ingredient> ingredients;
 }
